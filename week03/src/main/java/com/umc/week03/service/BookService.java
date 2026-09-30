@@ -16,4 +16,8 @@ public class BookService {
     public List<Map<String, Object>> getAllBooks() {
         return bookRepository.findAll();
     }
+
+    public void createBook(Map<String, Object> body) {
+        bookRepository.save(body);
+    }
 }
