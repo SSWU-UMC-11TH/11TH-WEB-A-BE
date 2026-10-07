@@ -18,7 +18,13 @@ public class BookController {
     private final BookService bookService;
 
     @GetMapping
-    public List<BookResponse> getBooks() {
+    public List<BookResponse> getBooks(
+            @RequestParam(required = false) String keyword
+    ) {
+        if (keyword != null && !keyword.isBlank()) {
+            return bookService.searchBooks(keyword);
+        }
+
         return bookService.getAllBooks();
     }
 
@@ -28,5 +34,12 @@ public class BookController {
             @Valid @RequestBody CreateBookRequest request
     ) {
         return bookService.createBook(request);
+    }
+
+    @GetMapping("/category/{categoryId}")
+    public List<BookResponse> getBooksByCategory(
+            @PathVariable Long categoryId
+    ) {
+        return bookService.getBooksByCategoryId(categoryId);
     }
 }

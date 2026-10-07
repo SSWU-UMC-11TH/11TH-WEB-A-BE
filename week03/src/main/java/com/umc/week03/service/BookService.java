@@ -42,4 +42,20 @@ public class BookService {
 
         return BookResponse.from(bookRepository.save(book));
     }
+
+    @Transactional(readOnly = true)
+    public List<BookResponse> searchBooks(String keyword) {
+        return bookRepository.findByTitleContainingOrderByBookIdDesc(keyword)
+                .stream()
+                .map(BookResponse::from)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<BookResponse> getBooksByCategoryId(Long categoryId) {
+        return bookRepository.findByCategoryCategoryId(categoryId)
+                .stream()
+                .map(BookResponse::from)
+                .toList();
+    }
 }
