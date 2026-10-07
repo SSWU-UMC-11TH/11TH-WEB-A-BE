@@ -1,4 +1,4 @@
-package com.umc.week03.repository;
+package com.umc.week03.domain.repository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;

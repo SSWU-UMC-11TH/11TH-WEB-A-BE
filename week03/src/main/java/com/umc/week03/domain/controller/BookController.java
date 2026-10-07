@@ -1,8 +1,8 @@
-package com.umc.week03.controller;
+package com.umc.week03.domain.controller;
 
 import com.umc.week03.domain.dto.BookResponse;
 import com.umc.week03.domain.dto.CreateBookRequest;
-import com.umc.week03.service.BookService;
+import com.umc.week03.domain.service.BookService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

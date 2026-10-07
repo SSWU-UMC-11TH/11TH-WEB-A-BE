@@ -1,6 +1,6 @@
-package com.umc.week03.controller;
+package com.umc.week03.domain.controller;
 
-import com.umc.week03.service.RentalService;
+import com.umc.week03.domain.service.RentalService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

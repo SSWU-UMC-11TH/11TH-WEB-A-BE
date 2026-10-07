@@ -1,11 +1,11 @@
-package com.umc.week03.service;
+package com.umc.week03.domain.service;
 
 import com.umc.week03.domain.dto.BookResponse;
 import com.umc.week03.domain.dto.CreateBookRequest;
 import com.umc.week03.domain.entity.Book;
 import com.umc.week03.domain.entity.Category;
-import com.umc.week03.repository.BookRepository;
-import com.umc.week03.repository.CategoryRepository;
+import com.umc.week03.domain.repository.BookRepository;
+import com.umc.week03.domain.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
