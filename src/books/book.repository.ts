@@ -1,7 +1,7 @@
 // src/book.repository.ts
 import { Injectable, Inject } from '@nestjs/common';
 import type { Pool } from 'mysql2/promise';
-import { DATABASE_CONNECTION } from './database.provider.js';
+import { DATABASE_CONNECTION } from '../database.provider.js';
 
 @Injectable() // NestJS 컨테이너에 "나 주입 가능한 부품이야!"라고 등록
 export class BookRepository {
