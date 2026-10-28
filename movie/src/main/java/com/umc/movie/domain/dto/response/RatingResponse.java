@@ -1,6 +1,6 @@
-package com.umc.movie.dto.response;
+package com.umc.movie.domain.dto.response;
 
-import com.umc.movie.entity.Rating;
+import com.umc.movie.domain.entity.Rating;
 
 import java.time.LocalDateTime;
 

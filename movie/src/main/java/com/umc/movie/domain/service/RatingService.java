@@ -1,9 +1,9 @@
 
-package com.umc.movie.service;
+package com.umc.movie.domain.service;
 
-import com.umc.movie.dto.response.RatingResponse;
-import com.umc.movie.repository.MemberRepository;
-import com.umc.movie.repository.RatingRepository;
+import com.umc.movie.domain.dto.response.RatingResponse;
+import com.umc.movie.domain.repository.MemberRepository;
+import com.umc.movie.domain.repository.RatingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;

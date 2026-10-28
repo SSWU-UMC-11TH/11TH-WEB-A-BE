@@ -1,8 +1,8 @@
-package com.umc.movie.service;
+package com.umc.movie.domain.service;
 
-import com.umc.movie.dto.response.EmailCheckResponse;
-import com.umc.movie.dto.response.NicknameCheckResponse;
-import com.umc.movie.repository.MemberRepository;
+import com.umc.movie.domain.dto.response.EmailCheckResponse;
+import com.umc.movie.domain.dto.response.NicknameCheckResponse;
+import com.umc.movie.domain.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

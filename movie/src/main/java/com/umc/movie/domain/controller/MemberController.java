@@ -1,9 +1,9 @@
 
-package com.umc.movie.controller;
+package com.umc.movie.domain.controller;
 
-import com.umc.movie.dto.response.EmailCheckResponse;
-import com.umc.movie.dto.response.NicknameCheckResponse;
-import com.umc.movie.service.MemberService;
+import com.umc.movie.domain.dto.response.EmailCheckResponse;
+import com.umc.movie.domain.dto.response.NicknameCheckResponse;
+import com.umc.movie.domain.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

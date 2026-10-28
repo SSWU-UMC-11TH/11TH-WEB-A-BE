@@ -1,7 +1,7 @@
-package com.umc.movie.controller;
+package com.umc.movie.domain.controller;
 
-import com.umc.movie.dto.response.RatingResponse;
-import com.umc.movie.service.RatingService;
+import com.umc.movie.domain.dto.response.RatingResponse;
+import com.umc.movie.domain.service.RatingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

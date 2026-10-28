@@ -1,5 +1,5 @@
 
-package com.umc.movie.entity;
+package com.umc.movie.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;

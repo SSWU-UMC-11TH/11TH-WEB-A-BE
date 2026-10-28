@@ -1,7 +1,7 @@
 
-package com.umc.movie.repository;
+package com.umc.movie.domain.repository;
 
-import com.umc.movie.entity.Rating;
+import com.umc.movie.domain.entity.Rating;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

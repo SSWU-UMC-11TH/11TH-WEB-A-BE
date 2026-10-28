@@ -1,6 +1,6 @@
-package com.umc.movie.repository;
+package com.umc.movie.domain.repository;
 
-import com.umc.movie.entity.Member;
+import com.umc.movie.domain.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
