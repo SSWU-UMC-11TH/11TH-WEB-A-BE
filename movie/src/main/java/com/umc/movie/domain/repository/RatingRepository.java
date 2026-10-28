@@ -1,4 +1,3 @@
-
 package com.umc.movie.domain.repository;
 
 import com.umc.movie.domain.entity.Rating;

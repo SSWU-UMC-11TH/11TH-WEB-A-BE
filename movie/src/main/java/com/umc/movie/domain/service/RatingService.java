@@ -1,4 +1,3 @@
-
 package com.umc.movie.domain.service;
 
 import com.umc.movie.domain.dto.response.RatingResponse;

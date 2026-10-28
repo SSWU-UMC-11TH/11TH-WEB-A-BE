@@ -1,4 +1,3 @@
-
 package com.umc.movie.domain.controller;
 
 import com.umc.movie.domain.dto.response.EmailCheckResponse;

@@ -1,4 +1,3 @@
-
 package com.umc.movie.domain.entity;
 
 import jakarta.persistence.*;
