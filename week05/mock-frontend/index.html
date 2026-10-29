@@ -1,18 +1,51 @@
-<!-- mock-frontend/index.html -->
-<!doctype html>
-<html lang="ko">
-  <body>
-    <h1>간이 프론트 : 닉네임 중복 체크</h1>
-    <button onclick="checkNickname()">'noco'으로 중복 체크</button>
-    <p id="result"></p>
 
-    <script>
-      async function checkNickname() {
-        // Spring이면 8080, NestJS면 3000으로 바꿔서 테스트하세요.
-        const res = await fetch("http://localhost:8080/members/nickname/noco");
-        const data = await res.json();
-        document.getElementById("result").innerText = JSON.stringify(data);
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>UMC 5주차 API 테스트</title>
+</head>
+<body>
+  <h2>UMC 5주차 API 연동 테스트</h2>
+
+  <h3>1. 닉네임 중복 확인</h3>
+  <button onclick="checkNickname()">수현 중복 확인</button>
+  <pre id="nicknameResult"></pre>
+
+  <h3>2. 이메일 중복 확인</h3>
+  <button onclick="checkEmail()">noco@umc.com 중복 확인</button>
+  <pre id="emailResult"></pre>
+
+  <h3>3. 회원별 평점 조회</h3>
+  <button onclick="getRatings()">1번 회원 평점 조회</button>
+  <pre id="ratingsResult"></pre>
+
+  <script>
+    const BASE_URL = "http://localhost:8080";
+
+    async function request(path, resultId) {
+      const result = document.getElementById(resultId);
+
+      try {
+        const response = await fetch(BASE_URL + path);
+        const data = await response.json();
+        result.textContent = JSON.stringify(data, null, 2);
+      } catch (error) {
+        result.textContent = "요청 실패: " + error.message;
       }
-    </script>
-  </body>
+    }
+
+    function checkNickname() {
+      request("/members/nickname/수현", "nicknameResult");
+    }
+
+    function checkEmail() {
+      request("/members/email/noco@umc.com", "emailResult");
+    }
+
+    function getRatings() {
+      request("/members/1/ratings", "ratingsResult");
+    }
+  </script>
+</body>
 </html>
