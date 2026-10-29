@@ -11,7 +11,7 @@ export class BookController {
 
   // HTTP GET 방식으로 /books 요청이 들어왔을 때 실행되는 핸들러
   @Get()
-  async getBooks(): Promise<any> {
+  async getBooks(): Promise<BookResponseDto[]> {
     return await this.bookService.getAllBooks();
   }
   // POST http://localhost:3000/books
