@@ -26,7 +26,7 @@ public class RatingService {
             );
         }
 
-        return ratingRepository.findByMemberId(memberId)
+        return ratingRepository.findByMemberIdOrderByIdDesc(memberId)
                 .stream()
                 .map(RatingResponse::from)
                 .toList();
