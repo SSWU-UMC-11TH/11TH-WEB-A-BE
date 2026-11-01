@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
 
 import java.util.Map;
 
@@ -26,7 +28,13 @@ public class RentalController {
 
     @PatchMapping("/{rentalId}/return")
     public String returnRental(@PathVariable Long rentalId) {
-        rentalService.returnRental(rentalId);
+        if (!rentalService.returnRental(rentalId)) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "존재하지 않거나 이미 반납된 대여입니다."
+            );
+        }
+
         return "도서 반납이 완료되었습니다!";
     }
 }
