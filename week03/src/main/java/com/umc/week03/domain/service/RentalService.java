@@ -1,6 +1,6 @@
-package com.umc.week03.service;
+package com.umc.week03.domain.service;
 
-import com.umc.week03.repository.RentalRepository;
+import com.umc.week03.domain.repository.RentalRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
