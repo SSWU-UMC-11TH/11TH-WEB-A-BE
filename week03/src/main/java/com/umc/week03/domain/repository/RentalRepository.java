@@ -1,10 +1,9 @@
 package com.umc.week03.domain.repository;
 
+import com.umc.week03.domain.dto.CreateRentalRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-
-import java.util.Map;
 
 @Repository
 @RequiredArgsConstructor
@@ -12,7 +11,7 @@ public class RentalRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public void save(Map<String, Object> body) {
+    public void save(CreateRentalRequest request) {
         String sql = """
                 INSERT INTO rental (user_id, book_id, rented_at, due_at)
                 VALUES (?, ?, NOW(), DATE_ADD(NOW(), INTERVAL 7 DAY))
@@ -20,14 +19,14 @@ public class RentalRepository {
 
         jdbcTemplate.update(
                 sql,
-                body.get("userId"),
-                body.get("bookId")
+                request.userId(),
+                request.bookId()
         );
     }
 
-    public void returnRental(Long rentalId) {
-        String sql = "UPDATE rental SET returned_at = NOW() WHERE rental_id = ?";
+    public int returnRental(Long rentalId) {
+        String sql = "UPDATE rental SET returned_at = NOW() WHERE rental_id = ? AND returned_at IS NULL";
 
-        jdbcTemplate.update(sql, rentalId);
+        return jdbcTemplate.update(sql, rentalId);
     }
 }
