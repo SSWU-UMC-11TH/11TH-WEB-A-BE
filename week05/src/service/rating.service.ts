@@ -18,10 +18,12 @@ export class RatingService {
   ) {}
 
   async getRatingsByMember(memberId: number): Promise<RatingResponseDto[]> {
-    const member = await this.memberRepository.findOneBy({ memberId });
+    const memberExists = await this.memberRepository.exists({
+      where: { memberId },
+    });
 
-    if (!member) {
-      throw new NotFoundException('존재하지 않는 유저입니다.');
+    if (!memberExists) {
+      throw new NotFoundException('존재하지 않는 회원입니다.');
     }
 
     const ratings = await this.ratingRepository.find({
