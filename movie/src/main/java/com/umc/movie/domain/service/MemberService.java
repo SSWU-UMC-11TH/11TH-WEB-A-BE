@@ -5,6 +5,7 @@ import com.umc.movie.domain.dto.response.EmailCheckResponse;
 import com.umc.movie.domain.dto.response.MemberResponse;
 import com.umc.movie.domain.dto.response.NicknameCheckResponse;
 import com.umc.movie.domain.entity.Member;
+import com.umc.movie.domain.exception.DuplicateMemberException;
 import com.umc.movie.domain.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -52,15 +53,15 @@ public class MemberService {
     public MemberResponse signUp(SignUpRequest request) {
 
         if (memberRepository.existsByEmail(request.email())) {
-            throw new ResponseStatusException(
-                    HttpStatus.CONFLICT,
+            throw new DuplicateMemberException(
+                    "MEMBER4091",
                     "이미 사용 중인 이메일입니다."
             );
         }
 
         if (memberRepository.existsByNickname(request.nickname())) {
-            throw new ResponseStatusException(
-                    HttpStatus.CONFLICT,
+            throw new DuplicateMemberException(
+                    "MEMBER4092",
                     "이미 사용 중인 닉네임입니다."
             );
         }
