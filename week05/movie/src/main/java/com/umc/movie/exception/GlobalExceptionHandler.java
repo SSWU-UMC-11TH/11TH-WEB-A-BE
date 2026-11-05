@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -34,5 +35,28 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
                 .body(ApiResponse.error("DUPLICATE_RESOURCE", e.getMessage()));
+    }
+
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<ApiResponse<Void>> handleResponseStatus(
+            ResponseStatusException e
+    ) {
+        HttpStatus status = HttpStatus.valueOf(e.getStatusCode().value());
+
+        String code = switch (status) {
+            case BAD_REQUEST -> "INVALID_INPUT";
+            case FORBIDDEN -> "FORBIDDEN";
+            case NOT_FOUND -> "NOT_FOUND";
+            case CONFLICT -> "DUPLICATE_RESOURCE";
+            default -> "REQUEST_FAILED";
+        };
+
+        String message = e.getReason() != null
+                ? e.getReason()
+                : "요청 처리 중 오류가 발생했습니다.";
+
+        return ResponseEntity
+                .status(status)
+                .body(ApiResponse.error(code, message));
     }
 }
