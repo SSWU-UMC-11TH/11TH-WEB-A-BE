@@ -1,6 +1,7 @@
 
 package com.umc.movie.controller;
 
+import com.umc.movie.dto.ApiResponse;
 import com.umc.movie.dto.CreateRatingRequest;
 import com.umc.movie.dto.RatingResponse;
 import com.umc.movie.dto.UpdateRatingRequest;
@@ -19,19 +20,25 @@ public class RatingController {
     private final RatingService ratingService;
 
     @PostMapping
-    public ResponseEntity<RatingResponse> createRating(
+    public ResponseEntity<ApiResponse<RatingResponse>> createRating(
             @PathVariable Long memberId,
             @Valid @RequestBody CreateRatingRequest request
     ) {
-        RatingResponse response = ratingService.createRating(memberId, request);
+        RatingResponse response = ratingService.createRating(
+                memberId, request
+        );
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(response);
+                .body(ApiResponse.success(
+                        "RATING_CREATED",
+                        "평점이 등록되었습니다.",
+                        response
+                ));
     }
 
     @PatchMapping("/{ratingId}")
-    public ResponseEntity<RatingResponse> updateRating(
+    public ResponseEntity<ApiResponse<RatingResponse>> updateRating(
             @PathVariable Long memberId,
             @PathVariable Long ratingId,
             @Valid @RequestBody UpdateRatingRequest request
@@ -40,7 +47,13 @@ public class RatingController {
                 memberId, ratingId, request
         );
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(
+                ApiResponse.success(
+                        "RATING_UPDATED",
+                        "평점이 수정되었습니다.",
+                        response
+                )
+        );
     }
 
     @DeleteMapping("/{ratingId}")

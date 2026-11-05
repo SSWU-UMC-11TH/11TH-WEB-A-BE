@@ -1,6 +1,7 @@
 
 package com.umc.movie.controller;
 
+import com.umc.movie.dto.ApiResponse;
 import com.umc.movie.dto.AvailabilityResponse;
 import com.umc.movie.dto.MemberResponse;
 import com.umc.movie.dto.RatingResponse;
@@ -24,14 +25,18 @@ public class MemberController {
     private final RatingService ratingService;
 
     @PostMapping
-    public ResponseEntity<MemberResponse> signUp(
+    public ResponseEntity<ApiResponse<MemberResponse>> signUp(
             @Valid @RequestBody SignUpRequest request
     ) {
         MemberResponse response = memberService.signUp(request);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(response);
+                .body(ApiResponse.success(
+                        "MEMBER_CREATED",
+                        "회원가입이 완료되었습니다.",
+                        response
+                ));
     }
 
     @GetMapping("/nickname/{nickname}")
