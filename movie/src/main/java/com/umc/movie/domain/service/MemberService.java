@@ -2,11 +2,13 @@ package com.umc.movie.domain.service;
 
 import com.umc.movie.domain.dto.request.SignUpRequest;
 import com.umc.movie.domain.dto.response.EmailCheckResponse;
+import com.umc.movie.domain.dto.response.MemberInfoResponse;
 import com.umc.movie.domain.dto.response.MemberResponse;
 import com.umc.movie.domain.dto.response.NicknameCheckResponse;
 import com.umc.movie.domain.entity.Member;
 import com.umc.movie.domain.exception.DuplicateMemberException;
 import com.umc.movie.domain.repository.MemberRepository;
+import com.umc.movie.global.error.ApiException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -79,5 +81,17 @@ public class MemberService {
                 savedMember.getEmail(),
                 savedMember.getNickname()
         );
+    }
+
+    @Transactional(readOnly = true)
+    public MemberInfoResponse getMyInfo(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new ApiException(
+                        HttpStatus.NOT_FOUND,
+                        "MEMBER404_1",
+                        "해당 회원을 찾을 수 없습니다."
+                ));
+
+        return MemberInfoResponse.from(member);
     }
 }
