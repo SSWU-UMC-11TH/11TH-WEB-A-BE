@@ -5,6 +5,7 @@ import com.umc.movie.domain.dto.request.UpdateRatingRequest;
 import com.umc.movie.domain.dto.response.RatingResponse;
 import com.umc.movie.domain.service.RatingService;
 import com.umc.movie.global.common.ApiResponse;
+import com.umc.movie.global.interceptor.AuthInterceptor;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -13,12 +14,11 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/members")
 public class RatingController {
 
     private final RatingService ratingService;
 
-    @GetMapping("/{memberId}/ratings")
+    @GetMapping("/members/{memberId}/ratings")
     public Page<RatingResponse> getMemberRatings(
             @PathVariable Long memberId,
             @RequestParam(defaultValue = "0") int page,
@@ -27,9 +27,9 @@ public class RatingController {
         return ratingService.getRatingsByMember(memberId, page, size);
     }
 
-    @PostMapping("/{memberId}/ratings")
+    @PostMapping("/ratings")
     public ResponseEntity<ApiResponse<Long>> create(
-            @PathVariable Long memberId,
+            @RequestAttribute(AuthInterceptor.MEMBER_ID) Long memberId,
             @Valid @RequestBody CreateRatingRequest request
     ) {
         Long ratingId = ratingService.create(memberId, request);
@@ -41,9 +41,9 @@ public class RatingController {
                 ));
     }
 
-    @PatchMapping("/{memberId}/ratings/{ratingId}")
+    @PatchMapping("/ratings/{ratingId}")
     public ResponseEntity<ApiResponse<Void>> update(
-            @PathVariable Long memberId,
+            @RequestAttribute(AuthInterceptor.MEMBER_ID) Long memberId,
             @PathVariable Long ratingId,
             @Valid @RequestBody UpdateRatingRequest request
     ) {
@@ -54,9 +54,9 @@ public class RatingController {
         );
     }
 
-    @DeleteMapping("/{memberId}/ratings/{ratingId}")
+    @DeleteMapping("/ratings/{ratingId}")
     public ResponseEntity<Void> delete(
-            @PathVariable Long memberId,
+            @RequestAttribute(AuthInterceptor.MEMBER_ID) Long memberId,
             @PathVariable Long ratingId
     ) {
         ratingService.delete(ratingId, memberId);
@@ -64,4 +64,3 @@ public class RatingController {
         return ResponseEntity.noContent().build();
     }
 }
-
