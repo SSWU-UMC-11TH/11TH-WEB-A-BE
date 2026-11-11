@@ -1,5 +1,6 @@
 package com.umc.movie.domain.service;
 
+import com.umc.movie.domain.dto.request.MemberUpdateRequest;
 import com.umc.movie.domain.dto.request.SignUpRequest;
 import com.umc.movie.domain.dto.response.EmailCheckResponse;
 import com.umc.movie.domain.dto.response.MemberInfoResponse;
@@ -92,6 +93,36 @@ public class MemberService {
                         "해당 회원을 찾을 수 없습니다."
                 ));
 
+        return MemberInfoResponse.from(member);
+    }
+
+    @Transactional
+    public MemberInfoResponse updateMyInfo(
+            Long memberId,
+            MemberUpdateRequest request
+    ) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new ApiException(
+                        HttpStatus.NOT_FOUND,
+                        "MEMBER404_1",
+                        "해당 회원을 찾을 수 없습니다."
+                ));
+
+        String nickname = request.nickname();
+
+        if (member.getNickname().equals(nickname)) {
+            return MemberInfoResponse.from(member);
+        }
+
+        if (memberRepository.existsByNickname(nickname)) {
+            throw new ApiException(
+                    HttpStatus.CONFLICT,
+                    "MEMBER409_1",
+                    "이미 사용 중인 닉네임입니다."
+            );
+        }
+
+        member.updateNickname(nickname);
         return MemberInfoResponse.from(member);
     }
 }

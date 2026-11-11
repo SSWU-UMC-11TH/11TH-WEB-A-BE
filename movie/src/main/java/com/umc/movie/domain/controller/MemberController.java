@@ -1,5 +1,6 @@
 package com.umc.movie.domain.controller;
 
+import com.umc.movie.domain.dto.request.MemberUpdateRequest;
 import com.umc.movie.domain.dto.request.SignUpRequest;
 import com.umc.movie.domain.dto.response.MemberInfoResponse;
 import com.umc.movie.global.common.ApiResponse;
@@ -48,6 +49,19 @@ public class MemberController {
 
         return ResponseEntity.ok(
                 ApiResponse.ok("회원 정보를 조회했습니다.", response)
+        );
+    }
+
+    @PatchMapping("/me")
+    public ResponseEntity<ApiResponse<MemberInfoResponse>> updateMyInfo(
+            @RequestAttribute(AuthInterceptor.MEMBER_ID) Long memberId,
+            @Valid @RequestBody MemberUpdateRequest request
+    ) {
+        MemberInfoResponse response =
+                memberService.updateMyInfo(memberId, request);
+
+        return ResponseEntity.ok(
+                ApiResponse.ok("회원 정보를 수정했습니다.", response)
         );
     }
 }
