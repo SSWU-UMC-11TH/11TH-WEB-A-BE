@@ -3,6 +3,7 @@ package com.umc.movie.domain.dto.request;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
@@ -18,5 +19,6 @@ public record CreateRatingRequest(
         Integer score,
 
         @Size(max = 500, message = "후기는 500자 이하로 입력해주세요.")
+        @Pattern(regexp = "^(?!\\s+$).*$", message = "후기는 공백만 입력할 수 없습니다.")
         String comment
 ) {}
