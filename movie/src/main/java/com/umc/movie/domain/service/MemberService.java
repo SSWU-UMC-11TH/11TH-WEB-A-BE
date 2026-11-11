@@ -1,10 +1,18 @@
 package com.umc.movie.domain.service;
 
+import com.umc.movie.domain.dto.request.MemberUpdateRequest;
+import com.umc.movie.domain.dto.request.SignUpRequest;
 import com.umc.movie.domain.dto.response.EmailCheckResponse;
+import com.umc.movie.domain.dto.response.MemberInfoResponse;
+import com.umc.movie.domain.dto.response.MemberResponse;
 import com.umc.movie.domain.dto.response.NicknameCheckResponse;
+import com.umc.movie.domain.entity.Member;
+import com.umc.movie.domain.exception.DuplicateMemberException;
 import com.umc.movie.domain.repository.MemberRepository;
+import com.umc.movie.global.error.ApiException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -14,6 +22,7 @@ import org.springframework.web.server.ResponseStatusException;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = true)
     public NicknameCheckResponse checkNickname(String nickname) {
@@ -42,5 +51,78 @@ public class MemberService {
         boolean exists = memberRepository.existsByEmail(email);
         return new EmailCheckResponse(!exists);
     }
-}
 
+    @Transactional
+    public MemberResponse signUp(SignUpRequest request) {
+
+        if (memberRepository.existsByEmail(request.email())) {
+            throw new DuplicateMemberException(
+                    "MEMBER4091",
+                    "이미 사용 중인 이메일입니다."
+            );
+        }
+
+        if (memberRepository.existsByNickname(request.nickname())) {
+            throw new DuplicateMemberException(
+                    "MEMBER4092",
+                    "이미 사용 중인 닉네임입니다."
+            );
+        }
+
+        Member member = Member.builder()
+                .email(request.email())
+                .password(passwordEncoder.encode(request.password()))
+                .nickname(request.nickname())
+                .build();
+
+        Member savedMember = memberRepository.save(member);
+
+        return new MemberResponse(
+                savedMember.getMemberId(),
+                savedMember.getEmail(),
+                savedMember.getNickname()
+        );
+    }
+
+    @Transactional(readOnly = true)
+    public MemberInfoResponse getMyInfo(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new ApiException(
+                        HttpStatus.NOT_FOUND,
+                        "MEMBER404_1",
+                        "해당 회원을 찾을 수 없습니다."
+                ));
+
+        return MemberInfoResponse.from(member);
+    }
+
+    @Transactional
+    public MemberInfoResponse updateMyInfo(
+            Long memberId,
+            MemberUpdateRequest request
+    ) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new ApiException(
+                        HttpStatus.NOT_FOUND,
+                        "MEMBER404_1",
+                        "해당 회원을 찾을 수 없습니다."
+                ));
+
+        String nickname = request.nickname();
+
+        if (member.getNickname().equals(nickname)) {
+            return MemberInfoResponse.from(member);
+        }
+
+        if (memberRepository.existsByNickname(nickname)) {
+            throw new ApiException(
+                    HttpStatus.CONFLICT,
+                    "MEMBER409_1",
+                    "이미 사용 중인 닉네임입니다."
+            );
+        }
+
+        member.updateNickname(nickname);
+        return MemberInfoResponse.from(member);
+    }
+}
