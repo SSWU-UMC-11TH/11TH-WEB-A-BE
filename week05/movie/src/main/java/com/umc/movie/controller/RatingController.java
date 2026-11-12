@@ -1,6 +1,6 @@
-
 package com.umc.movie.controller;
 
+import com.umc.movie.config.AuthInterceptor;
 import com.umc.movie.dto.ApiResponse;
 import com.umc.movie.dto.CreateRatingRequest;
 import com.umc.movie.dto.RatingResponse;
@@ -13,33 +13,30 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/members/{memberId}/ratings")
 @RequiredArgsConstructor
 public class RatingController {
 
     private final RatingService ratingService;
 
-    @PostMapping
+    @PostMapping("/ratings")
     public ResponseEntity<ApiResponse<RatingResponse>> createRating(
-            @PathVariable Long memberId,
+            @RequestAttribute(AuthInterceptor.MEMBER_ID) Long memberId,
             @Valid @RequestBody CreateRatingRequest request
     ) {
-        RatingResponse response = ratingService.createRating(
-                memberId, request
-        );
+        RatingResponse response = ratingService.createRating(memberId, request);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(ApiResponse.success(
-                        "RATING_CREATED",
+                        "COMMON201",
                         "평점이 등록되었습니다.",
                         response
                 ));
     }
 
-    @PatchMapping("/{ratingId}")
+    @PatchMapping("/ratings/{ratingId}")
     public ResponseEntity<ApiResponse<RatingResponse>> updateRating(
-            @PathVariable Long memberId,
+            @RequestAttribute(AuthInterceptor.MEMBER_ID) Long memberId,
             @PathVariable Long ratingId,
             @Valid @RequestBody UpdateRatingRequest request
     ) {
@@ -49,19 +46,26 @@ public class RatingController {
 
         return ResponseEntity.ok(
                 ApiResponse.success(
-                        "RATING_UPDATED",
+                        "COMMON200",
                         "평점이 수정되었습니다.",
                         response
                 )
         );
     }
 
-    @DeleteMapping("/{ratingId}")
-    public ResponseEntity<Void> deleteRating(
-            @PathVariable Long memberId,
+    @DeleteMapping("/ratings/{ratingId}")
+    public ResponseEntity<ApiResponse<Void>> deleteRating(
+            @RequestAttribute(AuthInterceptor.MEMBER_ID) Long memberId,
             @PathVariable Long ratingId
     ) {
         ratingService.deleteRating(memberId, ratingId);
-        return ResponseEntity.noContent().build();
+
+        return ResponseEntity.ok(
+                ApiResponse.success(
+                        "COMMON200",
+                        "평점이 삭제되었습니다.",
+                        null
+                )
+        );
     }
 }
