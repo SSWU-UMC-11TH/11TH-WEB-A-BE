@@ -1,11 +1,14 @@
 package com.umc.movie.domain.controller;
 
+import com.umc.movie.domain.dto.request.MemberUpdateRequest;
 import com.umc.movie.domain.dto.request.SignUpRequest;
+import com.umc.movie.domain.dto.response.MemberInfoResponse;
 import com.umc.movie.global.common.ApiResponse;
 import com.umc.movie.domain.dto.response.EmailCheckResponse;
 import com.umc.movie.domain.dto.response.MemberResponse;
 import com.umc.movie.domain.dto.response.NicknameCheckResponse;
 import com.umc.movie.domain.service.MemberService;
+import com.umc.movie.global.interceptor.AuthInterceptor;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -36,5 +39,29 @@ public class MemberController {
 
         return ResponseEntity.status(201)
                 .body(ApiResponse.created("회원가입에 성공했습니다.", response));
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<ApiResponse<MemberInfoResponse>> getMyInfo(
+            @RequestAttribute(AuthInterceptor.MEMBER_ID) Long memberId
+    ) {
+        MemberInfoResponse response = memberService.getMyInfo(memberId);
+
+        return ResponseEntity.ok(
+                ApiResponse.ok("회원 정보를 조회했습니다.", response)
+        );
+    }
+
+    @PatchMapping("/me")
+    public ResponseEntity<ApiResponse<MemberInfoResponse>> updateMyInfo(
+            @RequestAttribute(AuthInterceptor.MEMBER_ID) Long memberId,
+            @Valid @RequestBody MemberUpdateRequest request
+    ) {
+        MemberInfoResponse response =
+                memberService.updateMyInfo(memberId, request);
+
+        return ResponseEntity.ok(
+                ApiResponse.ok("회원 정보를 수정했습니다.", response)
+        );
     }
 }
