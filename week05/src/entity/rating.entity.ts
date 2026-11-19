@@ -4,11 +4,13 @@ import {
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  Check,
 } from 'typeorm';
 import { BaseTimeEntity } from './base-time.entity';
 import { Member } from './member.entity';
 
 @Entity('rating')
+@Check('CHK_rating_score', 'score >= 1 AND score <= 5')
 export class Rating extends BaseTimeEntity {
   @PrimaryGeneratedColumn({ name: 'rating_id' })
   ratingId: number;
