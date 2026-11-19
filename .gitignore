@@ -2,7 +2,9 @@
 /dist
 /node_modules
 /build
-
+**/node_modules/
+**/dist/
+**/.env
 # TypeScript build cache
 *.tsbuildinfo
 
@@ -44,6 +46,11 @@ lerna-debug.log*
 .env.test.local
 .env.production.local
 .env.local
+<<<<<<< HEAD
+.env.*
+!.env.example
+=======
+>>>>>>> origin/bbin
 
 # temp directory
 .temp
