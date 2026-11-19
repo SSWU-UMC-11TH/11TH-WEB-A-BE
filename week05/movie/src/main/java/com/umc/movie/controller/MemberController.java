@@ -1,11 +1,7 @@
-
 package com.umc.movie.controller;
 
-import com.umc.movie.dto.ApiResponse;
-import com.umc.movie.dto.AvailabilityResponse;
-import com.umc.movie.dto.MemberResponse;
-import com.umc.movie.dto.RatingResponse;
-import com.umc.movie.dto.SignUpRequest;
+import com.umc.movie.config.AuthInterceptor;
+import com.umc.movie.dto.*;
 import com.umc.movie.service.MemberService;
 import com.umc.movie.service.RatingService;
 import jakarta.validation.Valid;
@@ -58,5 +54,28 @@ public class MemberController {
             @PathVariable Long memberId
     ) {
         return ratingService.getRatingsByMember(memberId);
+    }
+
+    @GetMapping("/me")
+    public ApiResponse<MemberInfoResponse> getMyInfo(
+            @RequestAttribute(AuthInterceptor.MEMBER_ID) Long memberId
+    ) {
+        return ApiResponse.success(
+                "COMMON200",
+                "내 정보 조회에 성공했습니다.",
+                memberService.getMyInfo(memberId)
+        );
+    }
+
+    @PatchMapping("/me")
+    public ApiResponse<MemberInfoResponse> updateMyInfo(
+            @RequestAttribute(AuthInterceptor.MEMBER_ID) Long memberId,
+            @Valid @RequestBody MemberUpdateRequest request
+    ) {
+        return ApiResponse.success(
+                "COMMON200",
+                "내 정보 수정에 성공했습니다.",
+                memberService.updateMyInfo(memberId, request)
+        );
     }
 }

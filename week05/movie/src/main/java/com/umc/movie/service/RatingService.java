@@ -1,4 +1,3 @@
-
 package com.umc.movie.service;
 
 import com.umc.movie.dto.CreateRatingRequest;
@@ -6,6 +5,7 @@ import com.umc.movie.dto.RatingResponse;
 import com.umc.movie.dto.UpdateRatingRequest;
 import com.umc.movie.entity.Member;
 import com.umc.movie.entity.Rating;
+import com.umc.movie.exception.ApiException;
 import com.umc.movie.repository.MemberRepository;
 import com.umc.movie.repository.RatingRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +13,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -27,8 +26,10 @@ public class RatingService {
     @Transactional(readOnly = true)
     public List<RatingResponse> getRatingsByMember(Long memberId) {
         if (!memberRepository.existsById(memberId)) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "Member not found"
+            throw new ApiException(
+                    HttpStatus.NOT_FOUND,
+                    "MEMBER404_1",
+                    "해당 회원을 찾을 수 없습니다."
             );
         }
 
@@ -43,16 +44,16 @@ public class RatingService {
             Long memberId, CreateRatingRequest request
     ) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다."
+                .orElseThrow(() -> new ApiException(
+                        HttpStatus.NOT_FOUND,
+                        "MEMBER404_1",
+                        "해당 회원을 찾을 수 없습니다."
                 ));
 
         if (ratingRepository.existsByMemberIdAndMovieId(
                 memberId, request.movieId()
         )) {
-            throw new ResponseStatusException(
-                    HttpStatus.CONFLICT, "이미 평점을 등록한 영화입니다."
-            );
+            throw duplicateRating();
         }
 
         Rating rating = Rating.builder()
@@ -66,9 +67,7 @@ public class RatingService {
             Rating savedRating = ratingRepository.saveAndFlush(rating);
             return RatingResponse.from(savedRating);
         } catch (DataIntegrityViolationException e) {
-            throw new ResponseStatusException(
-                    HttpStatus.CONFLICT, "평점 저장 중 중복 또는 제약조건 위반이 발생했습니다.", e
-            );
+            throw duplicateRating();
         }
     }
 
@@ -90,16 +89,28 @@ public class RatingService {
 
     private Rating findOwnedRating(Long memberId, Long ratingId) {
         Rating rating = ratingRepository.findById(ratingId)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "평점을 찾을 수 없습니다."
+                .orElseThrow(() -> new ApiException(
+                        HttpStatus.NOT_FOUND,
+                        "RATING404_1",
+                        "해당 평점을 찾을 수 없습니다."
                 ));
 
         if (!rating.getMember().getId().equals(memberId)) {
-            throw new ResponseStatusException(
-                    HttpStatus.FORBIDDEN, "다른 회원의 평점은 수정하거나 삭제할 수 없습니다."
+            throw new ApiException(
+                    HttpStatus.FORBIDDEN,
+                    "RATING403_1",
+                    "본인이 작성한 평점만 수정하거나 삭제할 수 있습니다."
             );
         }
 
         return rating;
+    }
+
+    private ApiException duplicateRating() {
+        return new ApiException(
+                HttpStatus.CONFLICT,
+                "RATING409_1",
+                "이미 이 영화에 평점을 남기셨습니다."
+        );
     }
 }
