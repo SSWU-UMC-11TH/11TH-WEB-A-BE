@@ -1,25 +1,25 @@
+// src/app.module.ts
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
-
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthController } from './controller/auth.controller';
+import { FavoriteController } from './controller/favorite.controller';
+import { MemberController } from './controller/member.controller';
+import { MovieRecordController } from './controller/movie-record.controller';
+import { RatingController } from './controller/rating.controller';
+import { Favorite } from './entity/favorite.entity';
 import { Member } from './entity/member.entity';
 import { Rating } from './entity/rating.entity';
-
-import { MemberController } from './controller/member.controller';
-import { RatingController } from './controller/rating.controller';
-import { AuthController } from './controller/auth.controller';
-
-import { MemberService } from './service/member.service';
-import { RatingService } from './service/rating.service';
 import { AuthService } from './service/auth.service';
+import { FavoriteService } from './service/favorite.service';
+import { MemberService } from './service/member.service';
+import { MovieRecordService } from './service/movie-record.service';
+import { RatingService } from './service/rating.service';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
-
+    ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: process.env.DB_HOST,
@@ -30,14 +30,12 @@ import { AuthService } from './service/auth.service';
       autoLoadEntities: true,
       synchronize: false,
     }),
-
-    TypeOrmModule.forFeature([Member, Rating]),
-
+    TypeOrmModule.forFeature([Member, Rating, Favorite]),
     JwtModule.registerAsync({
       global: true,
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        secret: configService.getOrThrow<string>('JWT_SECRET'),
+        secret: configService.get<string>('JWT_SECRET'),
         signOptions: {
           expiresIn: Number(
             configService.get<string>('JWT_ACCESS_EXPIRATION') ?? 3600,
@@ -46,9 +44,19 @@ import { AuthService } from './service/auth.service';
       }),
     }),
   ],
-
-  controllers: [MemberController, RatingController, AuthController],
-
-  providers: [MemberService, RatingService, AuthService],
+  controllers: [
+    AuthController,
+    MemberController,
+    RatingController,
+    FavoriteController,
+    MovieRecordController,
+  ],
+  providers: [
+    MemberService,
+    RatingService,
+    AuthService,
+    FavoriteService,
+    MovieRecordService,
+  ],
 })
 export class AppModule {}

@@ -20,8 +20,11 @@ export class RatingService {
 
   // 5주차에 만든 조회입니다. 예외만 ApiException으로 바꿨습니다.
   async getRatingsByMember(memberId: number): Promise<RatingResponseDto[]> {
-    const member = await this.memberRepository.findOneBy({ memberId });
-    if (!member) {
+    const memberExists = await this.memberRepository.exists({
+      where: { memberId },
+    });
+
+    if (!memberExists) {
       throw new ApiException(
         HttpStatus.NOT_FOUND,
         'MEMBER404_1',
