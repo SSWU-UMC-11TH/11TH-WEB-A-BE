@@ -12,6 +12,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import java.util.List;
 
@@ -19,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/favorites")
 @Tag(name = "즐겨찾기", description = "즐겨찾기 관련 API")
+@SecurityRequirement(name = "bearerAuth")
 public class FavoriteController {
 
     private final FavoriteService favoriteService;

@@ -11,11 +11,13 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/movie-records")
 @Tag(name = "영화 기록", description = "영화 기록 API")
+@SecurityRequirement(name = "bearerAuth")
 public class MovieRecordController {
 
     private final MovieRecordService movieRecordService;

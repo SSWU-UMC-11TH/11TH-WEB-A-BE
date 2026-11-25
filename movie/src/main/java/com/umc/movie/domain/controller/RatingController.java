@@ -13,10 +13,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "평점", description = "회원 평점 API")
+@SecurityRequirement(name = "bearerAuth")
 public class RatingController {
 
     private final RatingService ratingService;

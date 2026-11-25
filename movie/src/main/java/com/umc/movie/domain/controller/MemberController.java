@@ -15,11 +15,13 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/members")
 @Tag(name = "회원", description = "회원 관련 API")
+@SecurityRequirement(name = "bearerAuth")
 public class MemberController {
 
     private final MemberService memberService;
