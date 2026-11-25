@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import com.umc.movie.global.error.ApiException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -67,8 +68,9 @@ public class RatingService {
         if (ratingRepository.existsByMember_MemberIdAndMovieId(
                 memberId, request.movieId()
         )) {
-            throw new ResponseStatusException(
+            throw new ApiException(
                     HttpStatus.CONFLICT,
+                    "RATING409_1",
                     "이미 이 영화에 평점을 남기셨습니다."
             );
         }
@@ -111,8 +113,9 @@ public class RatingService {
                 ));
 
         if (!rating.getMember().getMemberId().equals(memberId)) {
-            throw new ResponseStatusException(
+            throw new ApiException(
                     HttpStatus.FORBIDDEN,
+                    "RATING403_1",
                     "본인이 작성한 평점만 수정하거나 삭제할 수 있습니다."
             );
         }
