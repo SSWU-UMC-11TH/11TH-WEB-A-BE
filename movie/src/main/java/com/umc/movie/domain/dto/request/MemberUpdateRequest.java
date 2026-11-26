@@ -1,9 +1,14 @@
 package com.umc.movie.domain.dto.request;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 public record MemberUpdateRequest(
+        @Schema(
+                description = "닉네임",
+                example = "홍길동"
+        )
         @NotBlank(message = "닉네임을 입력해주세요.")
         @Size(min = 2, max = 12,
                 message = "닉네임은 2~12자여야 합니다.")

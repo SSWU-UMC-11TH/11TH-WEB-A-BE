@@ -6,20 +6,31 @@ import com.umc.movie.domain.dto.response.FavoriteStatusResponse;
 import com.umc.movie.domain.service.FavoriteService;
 import com.umc.movie.global.common.ApiResponse;
 import com.umc.movie.global.interceptor.AuthInterceptor;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/favorites")
+@Tag(name = "즐겨찾기", description = "즐겨찾기 관련 API")
+@SecurityRequirement(name = "bearerAuth")
 public class FavoriteController {
 
     private final FavoriteService favoriteService;
 
+    @Operation(
+            summary = "즐겨찾기 등록",
+            description = """
+                    주어진 영화에 대해 즐겨찾기를 등록합니다.
+                    """
+    )
     // 즐겨찾기 등록
     @PostMapping
     public ResponseEntity<ApiResponse<FavoriteResponse>> create(
@@ -36,6 +47,12 @@ public class FavoriteController {
                 ));
     }
 
+    @Operation(
+            summary = "내 즐겨찾기 목록 조회",
+            description = """
+                    주어진 회원의 내 즐겨찾기 목록을 조회합니다.
+                    """
+    )
     // 내 즐겨찾기 목록 조회
     @GetMapping
     public ResponseEntity<ApiResponse<List<FavoriteResponse>>> getMyFavorites(
@@ -49,6 +66,12 @@ public class FavoriteController {
         );
     }
 
+    @Operation(
+            summary = "즐겨찾기 여부 조회",
+            description = """
+                    주어진 영화에 대해 즐겨찾기 여부를 조회합니다.
+                    """
+    )
     // 즐겨찾기 여부 조회
     @GetMapping("/{movieId}")
     public ResponseEntity<ApiResponse<FavoriteStatusResponse>> getStatus(
@@ -63,6 +86,12 @@ public class FavoriteController {
         );
     }
 
+    @Operation(
+            summary = "즐겨찾기 해제",
+            description = """
+                    주어진 영화에 대해 즐겨찾기를 해제합니다.
+                    """
+    )
     // 즐겨찾기 해제
     @DeleteMapping("/{movieId}")
     public ResponseEntity<ApiResponse<Void>> delete(
